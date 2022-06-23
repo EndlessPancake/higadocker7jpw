@@ -1,0 +1,7 @@
+[
+{"ServiceCode":"FXY9009999","IPv4":"10.100.0.1"},
+{"ServiceCode":"FXY9008888","IPv4":"10.100.0.2"},
+{"ServiceCode":"FXY9007777","IPv4":"10.100.0.3"},
+{"ServiceCode":"FXY9006666","IPv4":"10.100.0.4"},
+{"ServiceCode":"FXY9005555","IPv4":"10.100.0.5"}
+]

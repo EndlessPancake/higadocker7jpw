@@ -1,0 +1,9 @@
+version: '3'
+services:
+  app:
+    image: node:11.8.0
+    ports:
+      - 3000:3000
+    volumes:
+      - ./tmp:/src
+    working_dir: /src

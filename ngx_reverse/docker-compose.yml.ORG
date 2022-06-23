@@ -1,0 +1,48 @@
+version: "3"
+services:
+  ngx_front:
+    container_name: ngx_front
+    image: nginx:latest
+    volumes:
+      - ./nginx:/usr/share/nginx/html
+      - ./nginx:/etc/nginx/conf.d
+    # environment:
+    #   VIRTUAL_HOST: 'bootcamp.example.com'
+    links:
+      - node00:node00
+      - node01:node01
+    ports:
+      - "443:443"
+  node00:
+    container_name: node00
+    image: node:11.15.0-alpine
+    volumes:
+      - ./node:/src
+    working_dir: "/src"
+    command: "node index.js"
+    links:
+      - redis
+    ports:
+      - "3000"
+  node01:
+    container_name: node01
+    image: node:11.15.0-alpine
+    volumes:
+      - ./node:/src
+    working_dir: "/src"
+    command: "node index.js"
+    links:
+      - redis
+    ports:
+      - "3000"
+  redis:
+    container_name: redis
+    image: redis:4.0.14-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass foobared
+    # volumes:
+    #   - redis-data:/data
+  # volumes:
+  #   redis-data:
+  #     driver: local

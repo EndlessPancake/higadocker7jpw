@@ -1,0 +1,22 @@
+server {
+    listen 80;
+    server_name localhost;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443;
+    server_name localhost;
+
+    ssl on;
+    ssl_certificate /etc/nginx/server.crt;
+    ssl_certificate_key /etc/nginx/server.key;
+
+    error_log /var/log/nginx/my_project_error.log;
+    access_log /var/log/nginx/my_projcet_access.log;
+
+    location / {
+        alias /usr/share/nginx/html/;
+    }
+}

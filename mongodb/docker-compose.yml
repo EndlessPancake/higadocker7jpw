@@ -1,0 +1,20 @@
+version: "3"
+services:
+  mongod01:
+    container_name: mongors01
+    image: mongo:3.6.13
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+    ports:
+      - "30001:27017"
+  mongod02:
+    container_name: mongors02
+    image: mongo:3.6.13
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+    ports:
+      - "30002:27017"
+  mongoa001:
+    container_name: mongoa01
+    image: mongo:3.6.13
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+    ports:
+      - "30003:27017"

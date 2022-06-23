@@ -1,0 +1,2 @@
+configparser
+scapy==2.4.3rc1

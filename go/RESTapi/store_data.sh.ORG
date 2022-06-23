@@ -1,0 +1,7 @@
+#!/bin/sh
+
+curl -i -H 'Content-Type: application/json'  -d '{"ServiceCode":"FXY9009999","IPv4":"10.100.0.1"}' http://127.0.0.1:8080/services
+curl -i -H 'Content-Type: application/json'  -d '{"ServiceCode":"FXY9008888","IPv4":"10.100.0.2"}' http://127.0.0.1:8080/services
+curl -i -H 'Content-Type: application/json'  -d '{"ServiceCode":"FXY9007777","IPv4":"10.100.0.3"}' http://127.0.0.1:8080/services
+curl -i -H 'Content-Type: application/json'  -d '{"ServiceCode":"FXY9006666","IPv4":"10.100.0.4"}' http://127.0.0.1:8080/services
+curl -i -H 'Content-Type: application/json'  -d '{"ServiceCode":"FXY9005555","IPv4":"10.100.0.5"}' http://127.0.0.1:8080/services

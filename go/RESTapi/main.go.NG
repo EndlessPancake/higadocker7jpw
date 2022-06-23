@@ -1,0 +1,93 @@
+package main
+
+import (
+    "github.com/ant0ine/go-json-rest/rest"
+    "log"
+    "net/http"
+    "sync"
+)
+
+func main() {
+    api := rest.NewApi()
+    api.Use(rest.DefaultDevStack...)
+    router, err := rest.MakeRouter(
+        rest.Get("/services", GetAllservices),
+        rest.Post("/services", Postservice),
+        rest.Get("/services/:code", Getservice),
+        rest.Delete("/services/:code", Deleteservice),
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+    api.SetApp(router)
+    log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
+}
+
+type service struct {
+    ServiceCode string
+    IPv4 string
+}
+
+var store = map[string]*service{}
+
+var lock = sync.RWMutex{}
+
+
+func Getservice(w rest.ResponseWriter, r *rest.Request) {
+    code := r.PathParam("code")
+
+    lock.RLock()
+    var service *service
+    if store[code] != nil {
+        service = &service{}
+        *service = *store[code]
+    }
+    lock.RUnlock()
+
+    if service == nil {
+        rest.NotFound(w, r)
+        return
+    }
+    w.WriteJson(service)
+}
+
+func GetAllservices(w rest.ResponseWriter, r *rest.Request) {
+    lock.RLock()
+    services := make([]service, len(store))
+    i := 0
+    for _, service := range store {
+        services[i] = *service
+        i++
+    }
+    lock.RUnlock()
+    w.WriteJson(&services)
+}
+
+func Postservice(w rest.ResponseWriter, r *rest.Request) {
+    service := service{}
+    err := r.DecodeJsonPayload(&service)
+    if err != nil {
+        rest.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    if service.ServiceCode == "" {
+        rest.Error(w, "service code required", 400)
+        return
+    }
+    if service.IPv4 == "" {
+        rest.Error(w, "service name required", 400)
+        return
+    }
+    lock.Lock()
+    store[service.ServiceCode] = &service
+    lock.Unlock()
+    w.WriteJson(&service)
+}
+
+func Deleteservice(w rest.ResponseWriter, r *rest.Request) {
+    code := r.PathParam("code")
+    lock.Lock()
+    delete(store, code)
+    lock.Unlock()
+    w.WriteHeader(http.StatusOK)
+}
